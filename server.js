@@ -1,25 +1,23 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+require("dotenv").config();
+
+const newsRoutes = require("./routes/newsRoutes");
 
 const app = express();
 
-app.use(cors());
+// Middleware
 app.use(express.json());
 
 // Routes
-app.use('/api/products', require('./routes/products'));
-app.use('/api/categories', require('./routes/categories'));
-app.use('/api/cart', require('./routes/cart'));
-app.use('/api/orders', require('./routes/orders'));
+app.use("/api/news", newsRoutes);
 
+// Root route
+app.get("/", (req, res) => {
+  res.json({ message: "News Headlines API is running!" });
+});
+
+// Start Server
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/rustikplank';
-
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    console.log('MongoDB connected');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch(err => console.error(err));
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
